@@ -10,8 +10,8 @@ def inicio():
     while True:
         #sensor[1] = GetLightSensor(1)
         #sensor[2] = GetLightSensor(4)
-        control(GetLightSensor(1), True)
-        control(GetLightSensor(4), False)
+        control(GetLightSensor(1),True)
+        control(GetLightSensor(4),False)
 
 
 
