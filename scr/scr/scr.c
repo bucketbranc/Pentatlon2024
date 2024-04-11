@@ -1,5 +1,4 @@
 #define _TASK_1_ 1
-#include "JMLib.h"
 #include <GetLightSensor.h>
 #include <SetDisplayString.h>
 #include <SetMotor.h>
