@@ -7,6 +7,9 @@ bandera = 0
 def task1():
     global VAR_umbral, bandera
     bandera = 0
+    SetDisplayStringXY(4,10,"PoodleBot",0xFFFF,0x0000,1)
+    SetDisplayStringXY(4,10,"GPL Licence V3",0x0000,0xFFFF,1)
+    rcu.SetDisplayPicture(20,10,"a.jpg",2)
     while True:
         if bandera == 0:
             if (GetLightSensor(1) < 2000) and (GetLightSensor(2) < 2000):
@@ -89,14 +92,14 @@ class performer:
             # Left Touches Black && Rigth Detects White
             #  - Both Motors Go Forward -
             if (Left > VAR_umbral) and (Rigth < VAR_umbral):
-                SetMotor(1, -100)
-                SetMotor(2, 100)
+                SetMotor(1, 100)
+                SetMotor(2, -100)
                 line=True
                 # Left detects white a && Rigth Touches black
                 # - M1 go 50 M2 go -50 -
             if (Left < VAR_umbral) and (Rigth > VAR_umbral):
-                SetMotor(1, 100)
-                SetMotor(2, -100)
+                SetMotor(1, -100)
+                SetMotor(2, 100)
                 line=True
         SetDisplayString(2, "1: Changing to Dark", 0xFFE0, 0x0000)
 
