@@ -9,7 +9,7 @@ class argon:
           SetMotor(1, left_speed)
           SetMotor(2, right_speed)
 
-     def getLigthSensors(self):
+     def getLigthSensors():
           """
           Returns the values of the two light sensors.
 
@@ -33,14 +33,14 @@ class argonPerformer:
           if left > THRESHOLD and right > THRESHOLD:
                argon.setMotors(35, 35)
           elif left < THRESHOLD <= right:
-               argon.setMotors(-100, 100)
-          elif left >= THRESHOLD > right:
-               argon.setMotors(100, -100)
+               argon.setMotors(-70, 70)
+          elif left > THRESHOLD > right:
+               argon.setMotors(70, -70)
 
      def dark(left: int, right: int) -> None:
           if left < THRESHOLD and right < THRESHOLD:
                argon.setMotors(35, 35)
-          elif left >= THRESHOLD > right:
+          elif left > THRESHOLD > right:
                argon.setMotors(-100, 100)
           elif left < THRESHOLD <= right:
                argon.setMotors(100, -100)
@@ -52,42 +52,45 @@ class argonPerformer:
                left, right = argon.getLigthSensors()
                if left < THRESHOLD and right < THRESHOLD:
                     argon.setMotors(35, 35)
-               elif left >= THRESHOLD > right:
-                    argon.setMotors(100, -100)
+                    if on_line:
+                        break
+               elif left > THRESHOLD > right:
+                    argon.setMotors(-50, 50)
                     on_line = True
                elif left < THRESHOLD <= right:
-                    argon.setMotors(-100, 100)
+                    argon.setMotors(-50, -50)
                     on_line = True
           SetDisplayString(2, "1: Changing to Dark", 0xFFE0, 0x0000)
 
      def dodge() -> None:
           SetDisplayString(2, "1: Dodging", 0xFFE0, 0x0000)
-          setMotors(-100, 50)
-          SetWaitForTime(0.6)
-          setMotors(50, 50)
-          SetWaitForTime(1.5)
-          setMotors(50, -90)
-          SetWaitForTime(0.6)
-          setMotors(50, 50)
+          argon.setMotors(0, 50) #1 Giro
+          SetWaitForTime(1.1)
+          argon.setMotors(50, 50) #     
+          SetWaitForTime(1.3)
+          argon.setMotors(40, -50)
+          SetWaitForTime(.4)
+          argon.setMotors(50, 40)
           SetWaitForTime(2)
-          setMotors(50, -50)
-          SetWaitForTime(0.7)
-          setMotors(50, 50)
-          SetWaitForTime(0.5)
+          argon.setMotors(50, 0)
+          SetWaitForTime(1)
+          argon.setMotors(50, 50)
           SetDisplayString(2, "1: ", 0xFFE0, 0x0000)
 
 def main() -> None:
-    SetDisplayStringXY(4, 10, "PoodleBot", 0xFFFF, 0x0000, 1)
-    SetDisplayStringXY(4, 10, "GPL Licence V3", 0x0000, 0xFFFF, 1)
-    SetDisplayPicture(20, 10, "a.jpg", 2)
+    SetDisplayStringXY(10, 10, "PoodleBot", 0xFFFF, 0x0000, 1)
+    SetDisplayStringXY(20, 10, "GPL Licence V3", 0x0000, 0xFFFF, 1)
 
     is_light_line = True
+    setback = True
     while True:
-        if argon.detectObstacle():
+        if argon.detectObstacle(10) and setback:
             SetDisplayString(4, "2: Stoping", 0xFFE0, 0x0000)
             argon.setMotors(0, 0)
+            SetWaitForTime(1)
             argonPerformer.dodge()
             argonPerformer.reintegrate()
+            argonPerformer.followLine(is_light_line)
         else:
             argonPerformer.followLine(is_light_line)
 

@@ -3,27 +3,41 @@ from rcu import *
 VAR_umbral = 0
 bandera = 0
 
+class argon:
+     def setMotors(right_speed: int, left_speed: int) -> None:
+          SetMotor(1, right_speed)
+          SetMotor(2, left_speed)
 
-def task1():
+     def getLigthSensors(self):
+          """
+          Returns the values of the two light sensors.
+
+          :return: A tuple containing the values of the two light sensors.
+          """
+          return GetLightSensor(1), GetLightSensor(2)
+
+     def detectObstacle(distance):
+          return GetUltrasound(3) < distance
+
+
+def rastreador():
     global VAR_umbral, bandera
     bandera = 0
     SetDisplayStringXY(4,10,"PoodleBot",0xFFFF,0x0000,1)
     SetDisplayStringXY(4,10,"GPL Licence V3",0x0000,0xFFFF,1)
-    rcu.SetDisplayPicture(20,10,"a.jpg",2)
+    SetDisplayPicture(20,10,"a.jpg",2)
     while True:
         if bandera == 0:
             if (GetLightSensor(1) < 2000) and (GetLightSensor(2) < 2000):
                 SetDisplayString(1, "0: Changing to Dark", 0xFFE0, 0x0000)
-                SetMotor(1, 0)
-                SetMotor(2, 0)
+                argon.setMotors(0,0)
                 bandera = 2
             performer.detectObject()
             performer.brigth(GetLightSensor(1), GetLightSensor(2))
         # Sensor Ultrasonico
         if bandera == 1:
             SetDisplayString(2, "1: Stopped", 0xFFE0, 0x0000)
-            SetMotor(1, 0)
-            SetMotor(2, 0)
+            argon.setMotors(0, 0)
             performer.dodge()
             bandera = 2
             if not ((GetUltrasound(3) < 30)):
@@ -31,12 +45,10 @@ def task1():
                 bandera = 0
         #oscuro
         if bandera == 2:
-            if (GetLightSensor(1) > 2000) and (GetLightSensor(2) > 2000):
-                SetDisplayString(3, "2:Changing to Brigth", 0xFFE0, 0x0000)
-                SetMotor(1, 0)
-                SetMotor(2, 0)
-                bandera = 0
-            performer.detectObject()
+            if argon.detectObstacle():
+                SetDisplayString(4, "2: Stoping", 0xFFE0, 0x0000)
+                argon.setMotors(0, 0)
+                bandera     
             performer.dark(GetLightSensor(1), GetLightSensor(2))
 
 
@@ -45,35 +57,37 @@ class performer:
         global VAR_umbral, bandera
         VAR_umbral = 2000
         if (Left > VAR_umbral) and (Rigth > VAR_umbral):
-            SetMotor(1, 35)
-            SetMotor(2, 35)
+            argon.setMotors(35,35)
         # Left Touches Black && Rigth Detects White
         #  - Both Motors Go Forward -
         if (Left < VAR_umbral) and (Rigth > VAR_umbral):
-            SetMotor(1, -100)
-            SetMotor(2, 100)
+            argon.setMotors(-100, 100)
         # Left detects white a && Rigth Touches black
         # - M1 go 50 M2 go -50 -
         if (Left > VAR_umbral) and (Rigth < VAR_umbral):
-            SetMotor(1, 100)
-            SetMotor(2, -100)
+            argon.setMotors(100, -100)
 
-    def dark(Left, Rigth):
+    '''def dark(Left, Rigth):
         global VAR_umbral, bandera
         VAR_umbral = 2000
         if (Left < VAR_umbral) and (Rigth < VAR_umbral):
-            SetMotor(1, 35)
-            SetMotor(2, 35)
+            argon.setMotors(35,35)
         # Left Touches Black && Rigth Detects White
         #  - Both Motors Go Forward -
         if (Left > VAR_umbral) and (Rigth < VAR_umbral):
-            SetMotor(1, -100)
-            SetMotor(2, 100)
+            argon.setMotors(-100, 100)
         # Left detects white a && Rigth Touches black
         # - M1 go 50 M2 go -50 -
         if (Left < VAR_umbral) and (Rigth > VAR_umbral):
-            SetMotor(1, 100)
-            SetMotor(2, -100)
+            argon.setMotors(100, -100)
+    '''
+    def dark(left: int, right: int) -> None:
+        if left < THRESHOLD and right < THRESHOLD:
+            argon.argon.setMotors(35, 35)
+        elif left >= THRESHOLD > right:
+            argon.argon.setMotors(-100, 100)
+        elif left < THRESHOLD <= right:
+            argon.argon.setMotors(100, -100)
 
     def reintegrate(Left, Rigth):
         global VAR_umbral, bandera
@@ -134,4 +148,4 @@ class performer:
             bandera = 1
 
 
-task1()
+rastreador()
