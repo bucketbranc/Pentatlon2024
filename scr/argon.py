@@ -80,6 +80,34 @@ class argonPerformer:
           SetWaitForTime(0.7)
           SetDisplayString(2, "1: ", 0xFFE0, 0x0000)
           SetDisplayString(4, "2: ", 0xFFE0, 0x0000)
+     def satelite() -> None:
+          argon.setMotors(0, 0)
+          SetWaitForTime(1)
+          argon.setMotors(-50, 50)
+          SetWaitForTime(0.6)
+          argon.setMotors(50, 50)
+          SetWaitForTime(0.9)
+          argon.setMotors(50, 0)
+          SetWaitForTime(0.8)
+          argon.setMotors(50, 50)
+          SetWaitForTime(0.9)
+          argon.setMotors(50, -25)
+          SetWaitForTime(0.8)
+          argon.setMotors(50, 50)
+          SetDisplayString(4, "3: Waiting Satelite", 0xFFE0, 0x0000)
+          while not(GetTouch(6)):
+               pass
+          SetMotor(3, -100)
+          SetDisplayString(4, "3: Satelite Found", 0xFFE0, 0x0000)
+          argon.setMotors(0, 0)
+          SetWaitForTime(3.2)
+          SetMotor(3, 0)
+          #regresar
+          SetDisplayString(4, "3: ", 0xFFE0, 0x0000)
+          argon.setMotors(-50, -50)
+          SetWaitForTime(1)
+          argon.setMotors(-50, 50)
+          SetWaitForTime(0.5)
 
 def main() -> None:
     SetDisplayStringXY(10, 10, "PoodleBot", 0xFFFF, 0x0000, 1)
@@ -89,24 +117,16 @@ def main() -> None:
     setback = False
     while True:
           if argon.detectObstacle(20) and setback:
-               SetDisplayString(4, "2: Obstacle Detected", 0xFFE0, 0x0000)
+               SetDisplayString(4, "3: Obstacle Detected", 0xFFE0, 0x0000)
                argon.setMotors(0, 0)
                SetWaitForTime(1)
                argonPerformer.dodge()
                argonPerformer.reintegrate()
                argonPerformer.followLine(is_light_line)
                setback=False
-          elif argon.detectObstacle(15) and not setback:
-               SetDisplayString(4, "2: Satelite Detected", 0xFFE0, 0x0000)
-               argon.setMotors(0, 0)
-               SetWaitForTime(1)
-               argon.setMotors(-50, 50)
-               SetWaitForTime(0.7)
-               argon.setMotors(50, 50)
-               SetWaitForTime(1)
-               argon.setMotors(50, -50)
-               SetWaitForTime(0.7)
-               SetMotor(3, 100)
+          elif argon.detectObstacle(10) and not setback:
+               SetDisplayString(4, "3: Satelite Detected", 0xFFE0, 0x0000)
+               argonPerformer.satelite()
           else:
                 argonPerformer.followLine(is_light_line)
 
