@@ -73,7 +73,14 @@ class argonPerformer:
                     SetWaitForTime(0.4)
                     on_line = True
           SetDisplayString(2, "1: Changing to Dark", 0xFFE0, 0x0000)
-
+     def pushObject():
+          argon.setMotors(0, 0)
+          SetWaitForTime(1)
+          argon.setMotors(0 ,50)
+          SetWaitForTime(1.2)
+          argon.setMotors(50 ,0)
+          SetWaitForTime(1.5)
+          argon.setMotors(50 ,50)
      def dodge() -> None:
           SetDisplayString(2, "1: Dodging", 0xFFE0, 0x0000)
           argon.setMotors(-50, 50)
@@ -123,13 +130,17 @@ class argonPerformer:
           argon.setMotors(0, 0)
           SetWaitForTime(0.1)
 def main() -> None:
-    SetDisplayStringXY(10, 10, "PoodleBot", 0xFFFF, 0x0000, 1)
-    SetDisplayStringXY(20, 10, "GPL Licence V3", 0x0000, 0xFFFF, 1)
+    SetDisplayStringXY(9, 9, "PoodleBot", 0xFFFF, 0x0000, 1)
+    SetDisplayStringXY(30, 30, "GPL Licence V3", 0xFFFF, 0x0000, 1)
 
     is_light_line = True
-    setback = True
+    setback = 0
     while True:
-          if argon.detectObstacle(23) and setback:
+          if not argon.detectObstacle(24):
+                argonPerformer.followLine(is_light_line)
+          elif argon.detectObstacle(20) and setback == 0:
+               argonPerformer.pushObject()
+          elif argon.detectObstacle(23) and setback:
                SetDisplayString(4, "3: Obstacle Detected", 0xFFE0, 0x0000)
                argon.setMotors(0, 0)
                SetWaitForTime(1)
@@ -141,9 +152,7 @@ def main() -> None:
                SetDisplayString(4, "3: Satelite Detected", 0xFFE0, 0x0000)
                argonPerformer.satelite()
                argonPerformer.reintegrate()
-               setback = 0
-          else:
-                argonPerformer.followLine(is_light_line)
+               setback = 1
 
           if (argon.getLigthSensors()[0] < THRESHOLD and argon.getLigthSensors()[1] < THRESHOLD):
                SetDisplayString(1, "0: Changing to Dark", 0xFFE0, 0x0000)
