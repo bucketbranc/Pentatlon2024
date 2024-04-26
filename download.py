@@ -11,16 +11,16 @@ parser.add_argument('filename')
 parser.add_argument('disk') 
 
 args = parser.parse_args()
-print (os.getcwd())
+path = os.getcwd()
 # Keep checking for the USB drive every 5 seconds
 while True:
     try:
         # Check if the target directory exists (USB drive is connected)
-        if os.path.exists("{}:/".format(args.disk)) and os.path.exists('{}\\scr\\{}.py'.format(os.getcwd(), args.filename)):
+        if os.path.exists("{}:/".format(args.disk)) and os.path.exists('{}\\scr\\{}.py'.format(path, args.filename)):
             # Copy the file to the target directory
-            shutil.copyfile('{}\\scr\\{}.py'.format(os.getcwd(), args.filename), '{}:/{}.py'.format(args.disk, args.filename))
+            shutil.copyfile('{}\\scr\\{}.py'.format(path, args.filename), '{}:/{}.py'.format(args.disk, args.filename))
             print("File copied successfully!")
-            playsound(os.getcwd() + "\\notification.mp3")
+            playsound(path + "\\notification.mp3")
             time.sleep(3)
     except Exception as e:
           print(e)

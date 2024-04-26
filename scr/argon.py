@@ -11,9 +11,10 @@ THRESHOLD = 2000
 OBSTACLE_DISTANCE = 15
 
 class argon:
-     def setMotors(left_speed: int, right_speed: int) -> None:
+     def setMotors(left_speed: int, right_speed: int, time: int = 0) -> None:
           SetMotor(1, left_speed)
           SetMotor(2, right_speed)
+          SetWaitForTime(time)
 
      def getLigthSensors():
           """
@@ -36,8 +37,16 @@ class argonPerformer:
                argonPerformer.dark(left, right)
 
      def light(left: int, right: int) -> None:
+          speed = 40
+          '''
+          
+          if not GetColorSensor(5,4) == 5:
+               speed = 30
+          elif GetColorSensor(5,4) == 5:
+               speed = 40
+          '''
           if left > THRESHOLD and right > THRESHOLD:
-               argon.setMotors(40, 40)
+               argon.setMotors(speed, speed)
           elif left < THRESHOLD < right:
                argon.setMotors(-100, 100)
           elif left > THRESHOLD > right:
@@ -74,12 +83,12 @@ class argonPerformer:
                     on_line = True
           SetDisplayString(2, "1: Changing to Dark", 0xFFE0, 0x0000)
      def pushObject():
-          argon.setMotors(0, 0)
-          SetWaitForTime(1)
-          argon.setMotors(0 ,50)
-          SetWaitForTime(1.2)
-          argon.setMotors(50 ,0)
-          SetWaitForTime(1.5)
+          argon.setMotors(0, 0, 1)
+          argon.setMotors(0, 50, 1.2)
+          argon.setMotors(50,50,0.3)
+          argon.setMotors(50, 0, 1)
+          argon.setMotors(50,50,0.4)
+          argon.setMotors(50, 0, 0.8)
           argon.setMotors(50 ,50)
      def dodge() -> None:
           SetDisplayString(2, "1: Dodging", 0xFFE0, 0x0000)
@@ -130,16 +139,18 @@ class argonPerformer:
           argon.setMotors(0, 0)
           SetWaitForTime(0.1)
 def main() -> None:
-    SetDisplayStringXY(9, 9, "PoodleBot", 0xFFFF, 0x0000, 1)
-    SetDisplayStringXY(30, 30, "GPL Licence V3", 0xFFFF, 0x0000, 1)
+    SetDisplayStringXY(40, 60, "PoodleBot", 0xFFFF, 0x0000, 1)
+    SetDisplayStringXY(50, 60, "GPL Licence V3", 0xFFFF, 0x0000, 1)
 
     is_light_line = True
     setback = 0
     while True:
-          if not argon.detectObstacle(24):
+          if not argon.detectObstacle(50):
                 argonPerformer.followLine(is_light_line)
-          elif argon.detectObstacle(20) and setback == 0:
+          elif argon.detectObstacle(42) and setback == 0:
+               SetDisplayString(4, "3: Object Detected", 0xFFE0, 0x0000)
                argonPerformer.pushObject()
+               setback = True
           elif argon.detectObstacle(23) and setback:
                SetDisplayString(4, "3: Obstacle Detected", 0xFFE0, 0x0000)
                argon.setMotors(0, 0)
