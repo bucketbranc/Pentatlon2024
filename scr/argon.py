@@ -1,5 +1,11 @@
 from rcu import *
+#Poodle-anotaciones :
+'''
 
+mejora el descaergador
+Arregla el esquivar
+Mover objeto
+'''
 # Constants
 THRESHOLD = 2000
 OBSTACLE_DISTANCE = 15
@@ -31,7 +37,7 @@ class argonPerformer:
 
      def light(left: int, right: int) -> None:
           if left > THRESHOLD and right > THRESHOLD:
-               argon.setMotors(35, 35)
+               argon.setMotors(40, 40)
           elif left < THRESHOLD < right:
                argon.setMotors(-100, 100)
           elif left > THRESHOLD > right:
@@ -39,7 +45,7 @@ class argonPerformer:
 
      def dark(left: int, right: int) -> None:
           if left < THRESHOLD and right < THRESHOLD:
-               argon.setMotors(35, 35)
+               argon.setMotors(40, 40)
           elif left > THRESHOLD > right:
                argon.setMotors(-100, 100)
           elif left < THRESHOLD < right:
@@ -53,14 +59,18 @@ class argonPerformer:
                if left < THRESHOLD and right < THRESHOLD:
                     argon.setMotors(35, 35)
                     if on_line:
-                        break
+                        pass
+               if left > THRESHOLD and right > THRESHOLD:
+                    argon.setMotors(-50, 50)
+                    on_line = True
+                    SetWaitForTime(0.4)
                elif left > THRESHOLD > right:
                     argon.setMotors(-50, 50)
-                    SetWaitForTime(0.5)
+                    SetWaitForTime(0.4)
                     on_line = True
                elif left < THRESHOLD < right:
-                    argon.setMotors(-50, -50)
-                    SetWaitForTime(0.5)
+                    argon.setMotors(-50, 30)
+                    SetWaitForTime(0.4)
                     on_line = True
           SetDisplayString(2, "1: Changing to Dark", 0xFFE0, 0x0000)
 
@@ -71,7 +81,7 @@ class argonPerformer:
           argon.setMotors(50, 50)
           SetWaitForTime(1.5)
           argon.setMotors(50, 0)
-          SetWaitForTime(0.75)
+          SetWaitForTime(0.85)
           argon.setMotors(50, 50)
           SetWaitForTime(3)
           argon.setMotors(50, 0)
@@ -83,16 +93,16 @@ class argonPerformer:
      def satelite() -> None:
           argon.setMotors(0, 0)
           SetWaitForTime(1)
-          argon.setMotors(-50, 50)
+          argon.setMotors(-50, 50) # giro inicial
           SetWaitForTime(0.6)
-          argon.setMotors(50, 50)
-          SetWaitForTime(0.9)
-          argon.setMotors(50, 0)
+          argon.setMotors(50, 50) # avanzar para volver a girar
+          SetWaitForTime(1.4)
+          argon.setMotors(50, 0) # girar 2
           SetWaitForTime(0.8)
-          argon.setMotors(50, 50)
+          argon.setMotors(50, 50) #avanzar para acoplarse
+          SetWaitForTime(0.5)
+          argon.setMotors(50, -25) # Acoplarse
           SetWaitForTime(0.9)
-          argon.setMotors(50, -25)
-          SetWaitForTime(0.8)
           argon.setMotors(50, 50)
           SetDisplayString(4, "3: Waiting Satelite", 0xFFE0, 0x0000)
           while not(GetTouch(6)):
@@ -105,18 +115,21 @@ class argonPerformer:
           #regresar
           SetDisplayString(4, "3: ", 0xFFE0, 0x0000)
           argon.setMotors(-50, -50)
-          SetWaitForTime(1)
-          argon.setMotors(-50, 50)
           SetWaitForTime(0.5)
-
+          argon.setMotors(50, -50)
+          SetWaitForTime(0.6)
+          argon.setMotors(50, 50)
+          SetWaitForTime(0.5)
+          argon.setMotors(0, 0)
+          SetWaitForTime(0.1)
 def main() -> None:
     SetDisplayStringXY(10, 10, "PoodleBot", 0xFFFF, 0x0000, 1)
     SetDisplayStringXY(20, 10, "GPL Licence V3", 0x0000, 0xFFFF, 1)
 
     is_light_line = True
-    setback = False
+    setback = True
     while True:
-          if argon.detectObstacle(20) and setback:
+          if argon.detectObstacle(23) and setback:
                SetDisplayString(4, "3: Obstacle Detected", 0xFFE0, 0x0000)
                argon.setMotors(0, 0)
                SetWaitForTime(1)
@@ -124,9 +137,11 @@ def main() -> None:
                argonPerformer.reintegrate()
                argonPerformer.followLine(is_light_line)
                setback=False
-          elif argon.detectObstacle(10) and not setback:
+          elif argon.detectObstacle(15) and setback == False:
                SetDisplayString(4, "3: Satelite Detected", 0xFFE0, 0x0000)
                argonPerformer.satelite()
+               argonPerformer.reintegrate()
+               setback = 0
           else:
                 argonPerformer.followLine(is_light_line)
 
