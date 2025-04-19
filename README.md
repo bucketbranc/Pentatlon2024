@@ -1,6 +1,11 @@
+<a href="https://python.org"><img src="https://img.shields.io/badge/Python-008080?style=for-the-badge&logo=python" alt="Python" /></a>
+<a href="https://colegiofinlandes.edu.mx/"><img src="https://img.shields.io/badge/Hecho_En-Colegio_Finlandes-3178C6?style=for-the-badge&logo=#E20722" alt="CFQ" /></a>
 # Rastreador
 > por Andre Segura, Santiago garcia
+> 
+> Ganador del concurso regional de robotica 2024 por **Netica**
 
+Para mas informacion o documentacion contacto por **Discord** __[@syctxa](https://discordapp.com/users/325605285731500033)__
 ## 1. Seguir la linea negra
 El principio para seguir una linea es muy basico.
 
